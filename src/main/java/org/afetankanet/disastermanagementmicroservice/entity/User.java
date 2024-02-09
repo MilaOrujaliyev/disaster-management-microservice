@@ -15,6 +15,10 @@ public class User {
     private String username;
     private String password;
 
+    @Lob
+    @Basic(fetch=FetchType.LAZY)
+    private byte[] profilePicture; //kullanıcı profil resmi(binary data in db) ekledim 2.term
+
     public Long getId() {
         return id;
     }
@@ -45,5 +49,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public byte[] getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(byte[] profilePicture) {
+        this.profilePicture = profilePicture;
     }
 }
