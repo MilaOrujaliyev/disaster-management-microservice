@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
+@CrossOrigin(origins = "*") // Tüm originlere izin ver
 @RestController
 @RequestMapping("/users")
 public class UserController {
