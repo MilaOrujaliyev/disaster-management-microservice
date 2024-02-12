@@ -2,6 +2,7 @@ package org.afetankanet.disastermanagementmicroservice.controller;
 
 import org.afetankanet.disastermanagementmicroservice.exception.DuplicateEmailException;
 import org.afetankanet.disastermanagementmicroservice.exception.DuplicateUsernameException;
+import org.afetankanet.disastermanagementmicroservice.model.PasswordUpdateRequest;
 import org.afetankanet.disastermanagementmicroservice.repository.UserRepository;
 import org.afetankanet.disastermanagementmicroservice.service.UserService;
 import org.afetankanet.disastermanagementmicroservice.entity.User;
@@ -55,6 +56,27 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MessageResponse("imageUnsuccess","Profil resmi yüklenemedi!!"));
         }
     }
+
+    @PutMapping("/updateUserInfo")
+    public ResponseEntity<?> updateUserInfo( @RequestBody User updatedUserInfo) {
+        try {
+            User updatedUser = userService.updateUserInfo( updatedUserInfo);
+            return ResponseEntity.ok(updatedUser);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse("Kullanıcı bilgileri güncellenemedi: " + e.getMessage()));
+        }
+    }
+
+    @PutMapping("/updatePassword")
+    public ResponseEntity<?> updatePassword( @RequestBody PasswordUpdateRequest passwordUpdateRequest) {
+        try {
+            userService.updatePassword( passwordUpdateRequest);
+            return ResponseEntity.ok(new MessageResponse("Şifre başarıyla güncellendi"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse("Şifre güncellenemedi: " + e.getMessage()));
+        }
+    }
+
 
 
 
