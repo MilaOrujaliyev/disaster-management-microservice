@@ -8,7 +8,9 @@ import org.afetankanet.disastermanagementmicroservice.util.PasswordUtil;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @Service
@@ -23,9 +25,9 @@ public class UserService {
             return userRepository.save(user);
         } catch (Exception e) {
             if(e.getMessage().contains("user_email_key")) {
-                throw new DuplicateEmailException("This email address is already in use.");
+                throw new DuplicateEmailException("Bu e-mail adresi zaten kullanımda.");
             } else if(e.getMessage().contains("user_username_key")) {
-                throw new DuplicateUsernameException("This username already exists.");
+                throw new DuplicateUsernameException("Bu kullanıcı adı zaten mevcut.");
             }
             throw e;
         }
@@ -37,5 +39,19 @@ public class UserService {
             return user;
         }
         return Optional.empty();
+    }
+
+    public void uploadProfilePicture(Long userId, MultipartFile file) throws IOException {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı."));
+
+        // MIME türü ve dosya boyutu kontrolü
+        String contentType = file.getContentType();
+        if (contentType == null || (!contentType.equals("image/jpeg") && !contentType.equals("image/png")) ) {
+            throw new IllegalArgumentException("Yalnızca JPEG veya PNG formatında resim dosyaları kabul edilmektedir!");
+        }
+
+        byte[] imageBytes = file.getBytes();
+        user.setProfilePicture(imageBytes);
+        userRepository.save(user);
     }
 }
