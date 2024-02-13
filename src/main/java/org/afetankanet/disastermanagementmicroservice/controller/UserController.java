@@ -2,7 +2,7 @@ package org.afetankanet.disastermanagementmicroservice.controller;
 
 import org.afetankanet.disastermanagementmicroservice.exception.DuplicateEmailException;
 import org.afetankanet.disastermanagementmicroservice.exception.DuplicateUsernameException;
-import org.afetankanet.disastermanagementmicroservice.model.PasswordUpdateRequest;
+import org.afetankanet.disastermanagementmicroservice.model.*;
 import org.afetankanet.disastermanagementmicroservice.repository.UserRepository;
 import org.afetankanet.disastermanagementmicroservice.service.UserService;
 import org.afetankanet.disastermanagementmicroservice.entity.User;
@@ -28,9 +28,9 @@ public class UserController {
     private UserRepository userRepository;
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody User user) {
+    public ResponseEntity<?> registerUser(@RequestBody UserRegisterRequest userRegisterRequest) {
         try {
-            User registeredUser = userService.registerUser(user);
+            UserResponse registeredUser = userService.registerUser(userRegisterRequest);
             return ResponseEntity.ok(registeredUser);
         } catch (DuplicateUsernameException | DuplicateEmailException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -38,9 +38,9 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> loginUser(@RequestBody User loginUser) {
-        Optional<User> user = userService.loginUser(loginUser);
-        return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+    public ResponseEntity<UserLoginResponse> loginUser(@RequestBody User loginUser) {
+        Optional<UserLoginResponse> userLoginResponse = userService.loginUser(loginUser);
+        return userLoginResponse.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
     }
 
     @PostMapping("/uploadProfilePicture")
@@ -58,10 +58,10 @@ public class UserController {
     }
 
     @PutMapping("/updateUserInfo")
-    public ResponseEntity<?> updateUserInfo( @RequestBody User updatedUserInfo) {
+    public ResponseEntity<?> updateUserInfo( @RequestBody UserUpdateRequest userUpdateRequest) {
         try {
-            User updatedUser = userService.updateUserInfo( updatedUserInfo);
-            return ResponseEntity.ok(updatedUser);
+            UserResponse userResponse = userService.updateUserInfo(userUpdateRequest);
+            return ResponseEntity.ok(userResponse);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse("Kullanıcı bilgileri güncellenemedi: " + e.getMessage()));
         }

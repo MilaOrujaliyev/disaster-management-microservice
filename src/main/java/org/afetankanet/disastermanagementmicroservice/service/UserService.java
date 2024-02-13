@@ -1,13 +1,12 @@
 package org.afetankanet.disastermanagementmicroservice.service;
 
-import org.afetankanet.disastermanagementmicroservice.controller.UserController;
+import jakarta.transaction.Transactional;
 import org.afetankanet.disastermanagementmicroservice.entity.User;
 import org.afetankanet.disastermanagementmicroservice.exception.DuplicateEmailException;
 import org.afetankanet.disastermanagementmicroservice.exception.DuplicateUsernameException;
-import org.afetankanet.disastermanagementmicroservice.model.PasswordUpdateRequest;
+import org.afetankanet.disastermanagementmicroservice.model.*;
 import org.afetankanet.disastermanagementmicroservice.repository.UserRepository;
 import org.afetankanet.disastermanagementmicroservice.util.PasswordUtil;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,10 +20,21 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public User registerUser(User user) throws DuplicateUsernameException, DuplicateEmailException {
+    public UserResponse registerUser(UserRegisterRequest userRegisterRequest) throws DuplicateUsernameException, DuplicateEmailException {
         try {
-            user.setPassword(PasswordUtil.hashPassword(user.getPassword()));
-            return userRepository.save(user);
+            User user = new User();
+            user.setUsername(userRegisterRequest.getUsername());
+            user.setEmail(userRegisterRequest.getEmail());
+            user.setPassword(PasswordUtil.hashPassword(userRegisterRequest.getPassword()));
+
+            User registeredUser = userRepository.save(user);
+
+            UserResponse userResponse = new UserResponse();
+            userResponse.setId(registeredUser.getId());
+            userResponse.setEmail(registeredUser.getEmail());
+            userResponse.setUsername(registeredUser.getUsername());
+
+            return userResponse;
         } catch (Exception e) {
             if(e.getMessage().contains("user_email_key")) {
                 throw new DuplicateEmailException("Bu e-mail adresi zaten kullanımda.");
@@ -34,11 +44,18 @@ public class UserService {
             throw e;
         }
     }
-
-    public Optional<User> loginUser(User loginUser) {
+    @Transactional
+    public Optional<UserLoginResponse> loginUser(User loginUser) {
         Optional<User> user = userRepository.findByUsername(loginUser.getUsername());
+
         if (user.isPresent() && PasswordUtil.checkPassword(loginUser.getPassword(), user.get().getPassword())) {
-            return user;
+            UserLoginResponse userLoginResponse = new UserLoginResponse();
+            userLoginResponse.setId(user.get().getId());
+            userLoginResponse.setUsername(user.get().getUsername());
+            userLoginResponse.setProfilePicture(user.get().getProfilePicture());
+            userLoginResponse.setEmail(user.get().getEmail());
+
+            return Optional.of(userLoginResponse);
         }
         return Optional.empty();
     }
@@ -57,17 +74,23 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public User updateUserInfo( User updatedUserInfo) {
-        User user = userRepository.findById(updatedUserInfo.getId()).orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı."));
+    public UserResponse updateUserInfo(UserUpdateRequest userUpdateRequest) {
+        User user = userRepository.findById(userUpdateRequest.getId()).orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı."));
 
-        if (updatedUserInfo.getEmail() != null && !updatedUserInfo.getEmail().isEmpty()) {
-            user.setEmail(updatedUserInfo.getEmail());
+        if (userUpdateRequest.getEmail() != null && !userUpdateRequest.getEmail().isEmpty()) {
+            user.setEmail(userUpdateRequest.getEmail());
         }
-        if (updatedUserInfo.getUsername() != null && !updatedUserInfo.getUsername().isEmpty()) {
-            user.setUsername(updatedUserInfo.getUsername());
+        if (userUpdateRequest.getUsername() != null && !userUpdateRequest.getUsername().isEmpty()) {
+            user.setUsername(userUpdateRequest.getUsername());
         }
 
-        return userRepository.save(user);
+        User updatedUser = userRepository.save(user);
+        UserResponse userResponse = new UserResponse();
+        userResponse.setId(updatedUser.getId());
+        userResponse.setEmail(updatedUser.getEmail());
+        userResponse.setUsername(updatedUser.getUsername());
+
+        return userResponse;
     }
 
     public void updatePassword(PasswordUpdateRequest passwordUpdateRequest) {
