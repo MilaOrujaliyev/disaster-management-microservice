@@ -13,6 +13,9 @@ public class User {
     private String email;
     @Column(unique = true)
     private String username;
+
+    @Column
+    private String nameSurname;
     private String password;
 
     @Lob
@@ -57,5 +60,13 @@ public class User {
 
     public void setProfilePicture(byte[] profilePicture) {
         this.profilePicture = profilePicture;
+    }
+
+    public String getNameSurname() {
+        return nameSurname;
+    }
+
+    public void setNameSurname(String nameSurname) {
+        this.nameSurname = nameSurname;
     }
 }
