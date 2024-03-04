@@ -82,14 +82,9 @@ public class UserController {
 
     @GetMapping("/getProfileInfo/{id}")
     public ResponseEntity<?> getUserProfile(@PathVariable Long id) {
-        return userRepository.findById(id).map(user -> {
-            ProfileInfoResponse profileInfoResponse = new ProfileInfoResponse();
-            profileInfoResponse.setId(user.getId());
-            profileInfoResponse.setUsername(user.getUsername());
-            profileInfoResponse.setNameSurname(user.getNameSurname());
-            profileInfoResponse.setProfilePicture(Base64.getEncoder().encodeToString(user.getProfilePicture()));
-            return ResponseEntity.ok(profileInfoResponse);
-        }).orElse(ResponseEntity.notFound().build());
+        return userService.getUserProfile(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
 

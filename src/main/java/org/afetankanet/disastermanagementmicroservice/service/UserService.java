@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.Optional;
 
 @Service
@@ -103,5 +104,16 @@ public class UserService {
         String hashedPassword = PasswordUtil.hashPassword(passwordUpdateRequest.getNewPassword());
         user.setPassword(hashedPassword);
         userRepository.save(user);
+    }
+
+    public Optional<ProfileInfoResponse> getUserProfile(Long id) {
+        return userRepository.findById(id).map(user -> {
+            ProfileInfoResponse profileInfoResponse = new ProfileInfoResponse();
+            profileInfoResponse.setId(user.getId());
+            profileInfoResponse.setUsername(user.getUsername());
+            profileInfoResponse.setNameSurname(user.getNameSurname());
+            profileInfoResponse.setProfilePicture(Base64.getEncoder().encodeToString(user.getProfilePicture()));
+            return profileInfoResponse;
+        });
     }
 }
