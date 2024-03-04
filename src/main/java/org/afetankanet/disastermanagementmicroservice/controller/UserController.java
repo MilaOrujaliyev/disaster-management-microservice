@@ -13,6 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Base64;
+
+
 import java.io.IOException;
 import java.util.Optional;
 
@@ -77,7 +80,17 @@ public class UserController {
         }
     }
 
-
+    @GetMapping("/getProfileInfo/{id}")
+    public ResponseEntity<?> getUserProfile(@PathVariable Long id) {
+        return userRepository.findById(id).map(user -> {
+            ProfileInfoResponse profileInfoResponse = new ProfileInfoResponse();
+            profileInfoResponse.setId(user.getId());
+            profileInfoResponse.setUsername(user.getUsername());
+            profileInfoResponse.setNameSurname(user.getNameSurname());
+            profileInfoResponse.setProfilePicture(Base64.getEncoder().encodeToString(user.getProfilePicture()));
+            return ResponseEntity.ok(profileInfoResponse);
+        }).orElse(ResponseEntity.notFound().build());
+    }
 
 
 }

@@ -83,7 +83,7 @@ public class UserService {
         if (userUpdateRequest.getUsername() != null && !userUpdateRequest.getUsername().isEmpty()) {
             user.setUsername(userUpdateRequest.getUsername());
         }
-        if (userUpdateRequest.getNameSurname() != null) {
+        if (userUpdateRequest.getNameSurname() != null  && !userUpdateRequest.getNameSurname().isEmpty()) {
             user.setNameSurname(userUpdateRequest.getNameSurname());
         }
         User updatedUser = userRepository.save(user);
