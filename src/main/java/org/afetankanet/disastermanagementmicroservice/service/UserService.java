@@ -1,6 +1,7 @@
 package org.afetankanet.disastermanagementmicroservice.service;
 
 import jakarta.transaction.Transactional;
+import org.afetankanet.disastermanagementmicroservice.converter.UserToProfileInfoResponseConverter;
 import org.afetankanet.disastermanagementmicroservice.entity.User;
 import org.afetankanet.disastermanagementmicroservice.exception.DuplicateEmailException;
 import org.afetankanet.disastermanagementmicroservice.exception.DuplicateUsernameException;
@@ -107,13 +108,6 @@ public class UserService {
     }
 
     public Optional<ProfileInfoResponse> getUserProfile(Long id) {
-        return userRepository.findById(id).map(user -> {
-            ProfileInfoResponse profileInfoResponse = new ProfileInfoResponse();
-            profileInfoResponse.setId(user.getId());
-            profileInfoResponse.setUsername(user.getUsername());
-            profileInfoResponse.setNameSurname(user.getNameSurname());
-            profileInfoResponse.setProfilePicture(Base64.getEncoder().encodeToString(user.getProfilePicture()));
-            return profileInfoResponse;
-        });
+        return userRepository.findById(id).map(UserToProfileInfoResponseConverter::convert);
     }
 }

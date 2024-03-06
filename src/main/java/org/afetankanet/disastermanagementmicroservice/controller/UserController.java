@@ -84,7 +84,7 @@ public class UserController {
     public ResponseEntity<?> getUserProfile(@PathVariable Long id) {
         return userService.getUserProfile(id)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElse(ResponseEntity.noContent().build());
     }
 
 
