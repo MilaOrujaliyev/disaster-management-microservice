@@ -6,6 +6,15 @@ public class UserResponse {
     private String email;
     private String username;
     private String nameSurname;
+
+    public UserResponse(String email, String username) {
+        this.email = email;
+        this.username = username;
+    }
+
+    public UserResponse() {
+    }
+
     public Long getId() {
         return id;
     }

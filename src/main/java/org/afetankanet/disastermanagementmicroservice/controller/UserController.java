@@ -2,8 +2,10 @@ package org.afetankanet.disastermanagementmicroservice.controller;
 
 import org.afetankanet.disastermanagementmicroservice.exception.DuplicateEmailException;
 import org.afetankanet.disastermanagementmicroservice.exception.DuplicateUsernameException;
+import org.afetankanet.disastermanagementmicroservice.exception.NotSuchAnEmailException;
 import org.afetankanet.disastermanagementmicroservice.model.*;
 import org.afetankanet.disastermanagementmicroservice.repository.UserRepository;
+import org.afetankanet.disastermanagementmicroservice.service.PasswordResetService;
 import org.afetankanet.disastermanagementmicroservice.service.UserService;
 import org.afetankanet.disastermanagementmicroservice.entity.User;
 import org.afetankanet.disastermanagementmicroservice.util.MessageResponse;
@@ -29,6 +31,9 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordResetService passwordResetService;
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody UserRegisterRequest userRegisterRequest) {
@@ -87,5 +92,15 @@ public class UserController {
                 .orElse(ResponseEntity.noContent().build());
     }
 
+    @GetMapping("/request/{email}")
+    public ResponseEntity<?> requestPasswordReset(@PathVariable String email) {
+        try {
+            passwordResetService.processPasswordResetRequest(email);
+            return ResponseEntity.ok("Şifre sıfırlama kodu gönderildi.");
+        }catch (NotSuchAnEmailException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(e.getMessage()));
+        }
+
+    }
 
 }
