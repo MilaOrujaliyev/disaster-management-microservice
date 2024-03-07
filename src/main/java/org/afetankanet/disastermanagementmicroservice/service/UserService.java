@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Base64;
 import java.util.Optional;
 
 @Service
@@ -27,7 +26,15 @@ public class UserService {
 
 
     public UserResponse registerUser(UserRegisterRequest userRegisterRequest) throws DuplicateUsernameException, DuplicateEmailException {
-        try {
+
+            if(userRepository.findByEmail(userRegisterRequest.getEmail()).isPresent()){
+                throw new DuplicateEmailException("Bu e-mail adresi zaten kullanımda.");
+            }
+
+            if(userRepository.findByUsername(userRegisterRequest.getUsername()).isPresent()){
+                throw new DuplicateUsernameException("Bu kullanıcı adı zaten mevcut.");
+            }
+
             User user = new User();
             user.setUsername(userRegisterRequest.getUsername());
             user.setEmail(userRegisterRequest.getEmail());
@@ -40,17 +47,10 @@ public class UserService {
             userResponse.setEmail(registeredUser.getEmail());
             userResponse.setUsername(registeredUser.getUsername());
 
-            emailClientService.sendRegistrationEmail(userResponse);
+            emailClientService.sendEmail(userResponse,"Hoş Geldiniz!","welcome-email");
 
             return userResponse;
-        } catch (Exception e) {
-            if(e.getMessage().contains("user_email_key")) {
-                throw new DuplicateEmailException("Bu e-mail adresi zaten kullanımda.");
-            } else if(e.getMessage().contains("user_username_key")) {
-                throw new DuplicateUsernameException("Bu kullanıcı adı zaten mevcut.");
-            }
-            throw e;
-        }
+
     }
     @Transactional
     public Optional<UserLoginResponse> loginUser(User loginUser) {
@@ -111,6 +111,14 @@ public class UserService {
         String hashedPassword = PasswordUtil.hashPassword(passwordUpdateRequest.getNewPassword());
         user.setPassword(hashedPassword);
         userRepository.save(user);
+
+        // UserResponse nesnesini oluştur
+        UserResponse userResponse = new UserResponse();
+        userResponse.setEmail(user.getEmail());
+        userResponse.setUsername(user.getUsername());
+
+        // Şifre değişikliği e-postası gönder
+        emailClientService.sendEmail(userResponse, "Şifreniz Değiştirildi!", "password-change-confirmation");
     }
 
     public Optional<ProfileInfoResponse> getUserProfile(Long id) {

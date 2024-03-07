@@ -22,19 +22,20 @@ public class EmailClientService {
         this.restTemplate = restTemplateBuilder.build();
     }
 
-    public void sendRegistrationEmail(UserResponse userResponse) {
+    public void sendEmail(UserResponse userResponse,String subject, String templateName) {
         EmailRequest emailRequest = new EmailRequest();
         emailRequest.setTo(userResponse.getEmail());
-        emailRequest.setSubject("Hoş Geldiniz!");
+        emailRequest.setSubject(subject);
 
-        // E-posta şablonu için gerekli bilgiler
+        // E-posta şablonu için bilgi
         Map<String, Object> templateModel = new HashMap<>();
         templateModel.put("username", userResponse.getUsername().toUpperCase(Locale.forLanguageTag("tr-TR"))); // Kullanıcının adını ve soyadını şablona eklemek için
         emailRequest.setTemplateModel(templateModel);
-        emailRequest.setTemplateName("welcome-email"); // Thymeleaf şablonunuzun adı
-
+        emailRequest.setTemplateName(templateName);
 
         restTemplate.postForObject(emailServiceUrl, emailRequest, String.class);
     }
+
+
 }
 
