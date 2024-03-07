@@ -9,7 +9,7 @@ public class UserToProfileInfoResponseConverter {
 
     public static ProfileInfoResponse convert(User user) {
         if (user == null) {
-            return null; // Eğer user null ise, null dön
+            return null;
         }
 
         ProfileInfoResponse profileInfoResponse = new ProfileInfoResponse();
@@ -17,7 +17,7 @@ public class UserToProfileInfoResponseConverter {
         profileInfoResponse.setUsername(user.getUsername());
         profileInfoResponse.setNameSurname(user.getNameSurname());
 
-        // Profil resmi varsa Base64 string'e çevir, yoksa null olarak bırak
+
         if (user.getProfilePicture() != null) {
             profileInfoResponse.setProfilePicture(Base64.getEncoder().encodeToString(user.getProfilePicture()));
         } else {

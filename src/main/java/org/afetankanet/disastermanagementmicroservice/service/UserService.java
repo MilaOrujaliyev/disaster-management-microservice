@@ -22,6 +22,10 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private EmailClientService emailClientService;
+
+
     public UserResponse registerUser(UserRegisterRequest userRegisterRequest) throws DuplicateUsernameException, DuplicateEmailException {
         try {
             User user = new User();
@@ -35,6 +39,8 @@ public class UserService {
             userResponse.setId(registeredUser.getId());
             userResponse.setEmail(registeredUser.getEmail());
             userResponse.setUsername(registeredUser.getUsername());
+
+            emailClientService.sendRegistrationEmail(userResponse);
 
             return userResponse;
         } catch (Exception e) {
