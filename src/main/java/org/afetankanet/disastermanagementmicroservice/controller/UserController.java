@@ -78,7 +78,7 @@ public class UserController {
     @PutMapping("/updatePassword")
     public ResponseEntity<?> updatePassword( @RequestBody PasswordUpdateRequest passwordUpdateRequest) {
         try {
-            userService.updatePassword( passwordUpdateRequest);
+            userService.updatePassword(passwordUpdateRequest);
             return ResponseEntity.ok(new MessageResponse("Şifre başarıyla güncellendi"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse("Şifre güncellenemedi: " + e.getMessage()));
@@ -100,7 +100,18 @@ public class UserController {
         }catch (NotSuchAnEmailException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(e.getMessage()));
         }
-
     }
+
+    @PostMapping("/verify-code")
+    public ResponseEntity<?> verifyCode(@RequestBody VerificationRequest verificationRequest){
+        boolean isCodeValid =passwordResetService.verifyCode(verificationRequest.getEmail(),verificationRequest.getPassword());
+
+        if(isCodeValid){
+            return ResponseEntity.ok("Kod doğru girildi.");
+        }else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("yanlış kod girildi.");
+        }
+    }
+
 
 }

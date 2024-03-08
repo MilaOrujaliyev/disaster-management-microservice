@@ -22,6 +22,24 @@ public class EmailClientService {
         this.restTemplate = restTemplateBuilder.build();
     }
 
+    public void sendEmail(UserResponse userResponse,String subject, String templateName,Map<String, Object> extraTemplateData) {
+        EmailRequest emailRequest = new EmailRequest();
+        emailRequest.setTo(userResponse.getEmail());
+        emailRequest.setSubject(subject);
+
+        // E-posta şablonu için bilgi
+        Map<String, Object> templateModel = new HashMap<>();
+        templateModel.put("username", userResponse.getUsername().toUpperCase(Locale.forLanguageTag("tr-TR")));
+
+        // Ekstra şablon verilerini ekle
+        templateModel.putAll(extraTemplateData);
+
+        emailRequest.setTemplateModel(templateModel);
+        emailRequest.setTemplateName(templateName);
+
+        restTemplate.postForObject(emailServiceUrl, emailRequest, String.class);
+    }
+
     public void sendEmail(UserResponse userResponse,String subject, String templateName) {
         EmailRequest emailRequest = new EmailRequest();
         emailRequest.setTo(userResponse.getEmail());
@@ -29,7 +47,8 @@ public class EmailClientService {
 
         // E-posta şablonu için bilgi
         Map<String, Object> templateModel = new HashMap<>();
-        templateModel.put("username", userResponse.getUsername().toUpperCase(Locale.forLanguageTag("tr-TR"))); // Kullanıcının adını ve soyadını şablona eklemek için
+        templateModel.put("username", userResponse.getUsername().toUpperCase(Locale.forLanguageTag("tr-TR")));
+
         emailRequest.setTemplateModel(templateModel);
         emailRequest.setTemplateName(templateName);
 

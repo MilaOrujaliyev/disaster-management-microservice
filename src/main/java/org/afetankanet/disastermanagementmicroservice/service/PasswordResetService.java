@@ -8,6 +8,8 @@ import org.afetankanet.disastermanagementmicroservice.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -28,11 +30,35 @@ public class PasswordResetService {
             user.setPassword(token);
             userRepository.save(user); // Token'ı veritabanında saklama işlemleri burada yapılabilir
 
-            emailClientService.sendEmail(new UserResponse(user.getEmail(),user.getUsername()),"Şifre Sıfırlama Kodunuz","password-reset-template");
+            setVerificationCode(email, token);
+
+            Map<String, Object> extraData = new HashMap<>();
+            extraData.put("token", token);
+
+            emailClientService.sendEmail(
+                    new UserResponse(user.getEmail(), user.getUsername()),
+                    "Şifre Sıfırlama Kodunuz",
+                    "password-reset-template",
+                    extraData
+            );
         }else{
             throw new NotSuchAnEmailException("Sistemde Böyle Bir email Bulunmamaktadır!");
         }
 
+    }
+
+
+    private final Map<String, String> userVerificationCodes = new HashMap<>();
+
+    public boolean verifyCode(String email, String enteredCode) {
+        //Map<String, String> türündeki bu nesne, e-posta adresini anahtar (key) olarak ve doğrulama kodunu değer (value) olarak saklar.
+        String correctCode = userVerificationCodes.get(email); // Kullanıcının e-postasına ait doğru kodu alın
+
+        return enteredCode.equals(correctCode); // karşılaştırma
+    }
+
+    public void setVerificationCode(String email, String code) {
+        userVerificationCodes.put(email, code); // Kullanıcının e-postasına ait kodu saklama
     }
 
 
