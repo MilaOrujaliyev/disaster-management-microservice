@@ -105,7 +105,12 @@ public class UserService {
     }
 
     public void updatePassword(PasswordUpdateRequest passwordUpdateRequest) {
-        User user = userRepository.findById(passwordUpdateRequest.getUserId()).orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı."));
+          User user;
+        if (passwordUpdateRequest.getEmail() != null) {
+            user = userRepository.findByEmail(passwordUpdateRequest.getEmail()).orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı."));
+        } else {
+            user = userRepository.findById(passwordUpdateRequest.getUserId()).orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı."));
+        }
 
         // PasswordUtil sınıfı kullanılarak şifreyi hashleme
         String hashedPassword = PasswordUtil.hashPassword(passwordUpdateRequest.getNewPassword());

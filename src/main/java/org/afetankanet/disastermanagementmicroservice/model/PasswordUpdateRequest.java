@@ -4,6 +4,8 @@ public class PasswordUpdateRequest {
     private String newPassword;
     private Long userId;
 
+    private String email;
+
     public Long getUserId() {
         return userId;
     }
@@ -18,5 +20,13 @@ public class PasswordUpdateRequest {
 
     public void setNewPassword(String newPassword) {
         this.newPassword = newPassword;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
