@@ -15,8 +15,10 @@ public class User {
     private String username;
     @Column
     private String nameSurname;
+    @Column
     private String password;
-
+    @Column
+    private Integer trustScore; // Kullanıcının güvenilirlik skoru --2.term
     @Lob
     @Basic(fetch=FetchType.LAZY)
     private byte[] profilePicture; //kullanıcı profil resmi(binary data in db) ekledim 2.term
@@ -67,5 +69,13 @@ public class User {
 
     public void setNameSurname(String nameSurname) {
         this.nameSurname = nameSurname;
+    }
+
+    public Integer getTrustScore() {
+        return trustScore;
+    }
+
+    public void setTrustScore(Integer trustScore) {
+        this.trustScore = trustScore;
     }
 }

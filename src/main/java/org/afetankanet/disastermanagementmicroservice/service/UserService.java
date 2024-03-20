@@ -3,16 +3,19 @@ package org.afetankanet.disastermanagementmicroservice.service;
 import jakarta.transaction.Transactional;
 import org.afetankanet.disastermanagementmicroservice.converter.UserToProfileInfoResponseConverter;
 import org.afetankanet.disastermanagementmicroservice.entity.User;
+import org.afetankanet.disastermanagementmicroservice.entity.Vote;
 import org.afetankanet.disastermanagementmicroservice.exception.DuplicateEmailException;
 import org.afetankanet.disastermanagementmicroservice.exception.DuplicateUsernameException;
 import org.afetankanet.disastermanagementmicroservice.model.*;
 import org.afetankanet.disastermanagementmicroservice.repository.UserRepository;
+import org.afetankanet.disastermanagementmicroservice.repository.VoteRepository;
 import org.afetankanet.disastermanagementmicroservice.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,6 +26,9 @@ public class UserService {
 
     @Autowired
     private EmailClientService emailClientService;
+
+    @Autowired
+    private VoteRepository voteRepository;
 
 
     public UserResponse registerUser(UserRegisterRequest userRegisterRequest) throws DuplicateUsernameException, DuplicateEmailException {
@@ -128,5 +134,27 @@ public class UserService {
 
     public Optional<ProfileInfoResponse> getUserProfile(Long id) {
         return userRepository.findById(id).map(UserToProfileInfoResponseConverter::convert);
+    }
+
+    public void updateTrustScore(Long votedUserId) {
+        User user = userRepository.findById(votedUserId)
+                .orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı"));
+
+        List<Vote> userVotes = voteRepository.findByVotedUserId(votedUserId);
+        int newScore = calculateNewTrustScore(userVotes);
+        user.setTrustScore(newScore);
+        userRepository.save(user);
+    }
+
+    private int calculateNewTrustScore(List<Vote> votes) {
+        if (votes.isEmpty()) {
+            return 0; // Eğer kullanıcıya hiç oy verilmemişse, varsayılan skor= 0
+        }
+
+        int totalScore = votes.stream()
+                .mapToInt(Vote::getScore)
+                .sum();
+
+        return Math.round((float) totalScore / votes.size());
     }
 }
