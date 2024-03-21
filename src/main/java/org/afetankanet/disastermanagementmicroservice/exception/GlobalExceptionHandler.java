@@ -18,4 +18,6 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.PAYLOAD_TOO_LARGE)
                 .body(new MessageResponse("Dosya boyutu limiti aşıldı. Lütfen dosya boyutu 5 MB'dan küçük olmalıdır."));
     }
+
+
 }

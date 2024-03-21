@@ -31,8 +31,7 @@ public class HelpBox {
 
     @NotBlank
     @Column
-    @Enumerated(EnumType.STRING)
-    private City city;
+    private String city;
 
     @NotBlank
     @Column
@@ -84,11 +83,11 @@ public class HelpBox {
         this.active = active;
     }
 
-    public City getCity() {
+    public String getCity() {
         return city;
     }
 
-    public void setCity(City city) {
+    public void setCity(String city) {
         this.city = city;
     }
 

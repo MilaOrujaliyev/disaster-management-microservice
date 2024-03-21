@@ -1,11 +1,13 @@
 package org.afetankanet.disastermanagementmicroservice.controller;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.afetankanet.disastermanagementmicroservice.entity.HelpBox;
 import org.afetankanet.disastermanagementmicroservice.model.Category;
 import org.afetankanet.disastermanagementmicroservice.model.City;
 import org.afetankanet.disastermanagementmicroservice.service.HelpBoxService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -35,14 +37,26 @@ public class HelpBoxController {
     }
 
     @PostMapping("/createHelpBox")
-    public ResponseEntity<HelpBox> createHelpBox(@Valid @RequestBody  HelpBox helpBox){
-        return ResponseEntity.ok(helpBoxService.createHelpBox( helpBox));
+    public ResponseEntity<?> createHelpBox(@Valid @RequestBody  HelpBox helpBox){
+        try{
+            return ResponseEntity.ok(helpBoxService.createHelpBox( helpBox));
+        }catch (IllegalStateException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+
     }
 
     @PutMapping("/updateHelpBox/{id}")
-    public ResponseEntity<HelpBox> updateHelpBox(@PathVariable Long id, @Valid @RequestBody HelpBox helpBox) {
-        return ResponseEntity.ok(helpBoxService.updateHelpBox(id, helpBox));
+    public ResponseEntity<?> updateHelpBox(@PathVariable Long id, @Valid @RequestBody HelpBox helpBox) {
+
+        try{
+            return ResponseEntity.ok(helpBoxService.updateHelpBox(id, helpBox));
+        }catch (EntityNotFoundException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
+
+
 
     @GetMapping("/getAllHelpBoxes")
     public ResponseEntity<List<HelpBox>> getAllHelpBoxes(){
