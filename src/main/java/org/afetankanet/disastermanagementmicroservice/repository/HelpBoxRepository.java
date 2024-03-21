@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface HelpBoxRepository extends JpaRepository<HelpBox,Long> {
     List<HelpBox> findByUserId(Long userId);
+    boolean existsByUserIdAndActive(Long userId, Boolean active);
 }

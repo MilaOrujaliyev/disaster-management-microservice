@@ -39,6 +39,11 @@ public class HelpBoxController {
         return ResponseEntity.ok(helpBoxService.createHelpBox( helpBox));
     }
 
+    @PutMapping("/updateHelpBox/{id}")
+    public ResponseEntity<HelpBox> updateHelpBox(@PathVariable Long id, @Valid @RequestBody HelpBox helpBox) {
+        return ResponseEntity.ok(helpBoxService.updateHelpBox(id, helpBox));
+    }
+
     @GetMapping("/getAllHelpBoxes")
     public ResponseEntity<List<HelpBox>> getAllHelpBoxes(){
         return ResponseEntity.ok(helpBoxService.getAllHelpBoxes());
