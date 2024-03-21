@@ -21,7 +21,7 @@ import java.util.Base64;
 import java.io.IOException;
 import java.util.Optional;
 
-@CrossOrigin(origins = "*") // Tüm originlere izin ver
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/users")
 public class UserController {

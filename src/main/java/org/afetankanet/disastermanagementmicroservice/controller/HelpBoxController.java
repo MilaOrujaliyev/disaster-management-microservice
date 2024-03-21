@@ -3,6 +3,7 @@ package org.afetankanet.disastermanagementmicroservice.controller;
 import jakarta.validation.Valid;
 import org.afetankanet.disastermanagementmicroservice.entity.HelpBox;
 import org.afetankanet.disastermanagementmicroservice.model.Category;
+import org.afetankanet.disastermanagementmicroservice.model.City;
 import org.afetankanet.disastermanagementmicroservice.service.HelpBoxService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,14 @@ public class HelpBoxController {
 
     @Autowired
     private HelpBoxService helpBoxService;
+
+    @GetMapping("/cities")
+    public List<String> getCities(){
+        return Arrays.stream(City.values())
+                .map(City::getDisplayName)
+                .collect(Collectors.toList());
+    }
+
     @GetMapping("/categories")
     public List<String> getAllCategories(){
         return Arrays.stream(Category.values()).map(Category::getDisplayName).collect(Collectors.toList());

@@ -118,17 +118,14 @@ public class UserService {
             user = userRepository.findById(passwordUpdateRequest.getUserId()).orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı."));
         }
 
-        // PasswordUtil sınıfı kullanılarak şifreyi hashleme
         String hashedPassword = PasswordUtil.hashPassword(passwordUpdateRequest.getNewPassword());
         user.setPassword(hashedPassword);
         userRepository.save(user);
 
-        // UserResponse nesnesini oluştur
         UserResponse userResponse = new UserResponse();
         userResponse.setEmail(user.getEmail());
         userResponse.setUsername(user.getUsername());
 
-        // Şifre değişikliği e-postası gönder
         emailClientService.sendEmail(userResponse, "Şifreniz Değiştirildi!", "password-change-confirmation");
     }
 

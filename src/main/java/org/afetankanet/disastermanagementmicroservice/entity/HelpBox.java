@@ -3,6 +3,7 @@ package org.afetankanet.disastermanagementmicroservice.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.afetankanet.disastermanagementmicroservice.model.City;
 
 import java.util.List;
 
@@ -30,7 +31,8 @@ public class HelpBox {
 
     @NotBlank
     @Column
-    private String city;
+    @Enumerated(EnumType.STRING)
+    private City city;
 
     @NotBlank
     @Column
@@ -82,11 +84,11 @@ public class HelpBox {
         this.active = active;
     }
 
-    public String getCity() {
+    public City getCity() {
         return city;
     }
 
-    public void setCity(String city) {
+    public void setCity(City city) {
         this.city = city;
     }
 
