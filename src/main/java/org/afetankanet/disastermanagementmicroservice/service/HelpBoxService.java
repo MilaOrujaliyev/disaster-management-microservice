@@ -27,7 +27,7 @@ public class HelpBoxService {
 
     public HelpBox updateHelpBox(Long id, HelpBox updatedHelpBox) {
         HelpBox existingHelpBox = helpBoxRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("yardım kutusu bulunamadı");
+                .orElseThrow(() -> new EntityNotFoundException("yardım kutusu bulunamadı"));
 
         existingHelpBox.setSummary(updatedHelpBox.getSummary());
         existingHelpBox.setCategories(updatedHelpBox.getCategories());
