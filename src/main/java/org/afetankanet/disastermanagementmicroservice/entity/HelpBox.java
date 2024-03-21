@@ -22,7 +22,6 @@ public class HelpBox {
     @ElementCollection
     private List<String> categories; //giysi, yiyecek, barınak,…
 
-    @NotBlank
     @Column
     private String contactInfo;
 

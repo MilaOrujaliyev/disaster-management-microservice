@@ -6,7 +6,6 @@ public enum Category {
     BARINAK("Barınak"),
     EGITIM("Eğitim"),
     SAGLIK("Sağlık"),
-    TEMIZLIK("Temizlik Malzemeleri"),
     OYUNCAK("Oyuncak"),
     KIRTASIYE("Kırtasiye"),
     EV_ESYASI("Ev Eşyaları");

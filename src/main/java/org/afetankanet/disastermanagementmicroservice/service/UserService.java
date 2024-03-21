@@ -136,6 +136,11 @@ public class UserService {
         return userRepository.findById(id).map(UserToProfileInfoResponseConverter::convert);
     }
 
+    public boolean isNameSurnameFilled(Long userId){
+        Optional<User> userOptional=userRepository.findById(userId);
+        return userOptional.isPresent() && userOptional.get().getNameSurname()!= null && !userOptional.get().getNameSurname().trim().isEmpty();
+    }
+
     public void updateTrustScore(Long votedUserId) {
         User user = userRepository.findById(votedUserId)
                 .orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı"));

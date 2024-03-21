@@ -113,5 +113,13 @@ public class UserController {
         }
     }
 
-
+    @GetMapping("/checkNameSurname/{id}")
+    public ResponseEntity<Void> checkNameSurname(@PathVariable Long id){
+        if(userService.isNameSurnameFilled(id)){
+            return ResponseEntity.ok().build();
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
 }
