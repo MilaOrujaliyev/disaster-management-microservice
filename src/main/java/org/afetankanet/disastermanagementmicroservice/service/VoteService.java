@@ -23,23 +23,18 @@ public class VoteService {
     @Autowired
     private HelpBoxRepository helpBoxRepository;
 
-    public Vote castVote(Long votedUserId, Long helpBoxId, int score) {
+    public Vote castVote(Vote vote) {
 
-        Vote vote = new Vote();
-
-        User votedUser = userRepository.findById(votedUserId)
+        User votedUser = userRepository.findById(vote.getVotedUser().getId())
                 .orElseThrow(() -> new RuntimeException("Oy verilen kullanıcı bulunamadı"));
         vote.setVotedUser(votedUser);
 
-        HelpBox helpBox = helpBoxRepository.findById(helpBoxId)
+        HelpBox helpBox = helpBoxRepository.findById(vote.getHelpBox().getId())
                 .orElseThrow(() -> new RuntimeException("Yardım kutusu bulunamadı"));
         vote.setHelpBox(helpBox);
 
-        vote.setScore(score);
-
+        userService.updateTrustScore(vote.getVotedUser().getId());
         voteRepository.save(vote);
-
-        userService.updateTrustScore(votedUserId);
 
         return vote;
     }
