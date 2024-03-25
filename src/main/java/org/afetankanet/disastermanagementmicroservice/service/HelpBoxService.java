@@ -3,6 +3,7 @@ package org.afetankanet.disastermanagementmicroservice.service;
 import jakarta.persistence.EntityNotFoundException;
 import org.afetankanet.disastermanagementmicroservice.entity.HelpBox;
 import org.afetankanet.disastermanagementmicroservice.repository.HelpBoxRepository;
+import org.afetankanet.disastermanagementmicroservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -13,13 +14,25 @@ import java.util.List;
 public class HelpBoxService {
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private EmailClientService emailClientService;
+    @Autowired
     private HelpBoxRepository helpBoxRepository;
+
+    @Autowired
+    private ChatGPTService chatGPTService;
 
     public HelpBox createHelpBox(HelpBox helpBox) {
 
         boolean hasActiveBox=helpBoxRepository.existsByUserIdAndActive(helpBox.getUser().getId(),true);
         if(hasActiveBox){
             throw new IllegalStateException("Kullanıcı zaten aktif bir yardım kutusuna sahip.");
+        }
+
+        if(!chatGPTService.isContentAppropriate(helpBox.getSummary())||!chatGPTService.isContentAppropriate(helpBox.getPurpose())){
+            throw new IllegalStateException("Yardım kutusu açıklaması veya amacı uygun değil.");
         }
 
         helpBox.setActive(true);

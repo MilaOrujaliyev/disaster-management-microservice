@@ -111,7 +111,7 @@ public class UserService {
     }
 
     public void updatePassword(PasswordUpdateRequest passwordUpdateRequest) {
-          User user;
+        User user;
         if (passwordUpdateRequest.getEmail() != null) {
             user = userRepository.findByEmail(passwordUpdateRequest.getEmail()).orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı."));
         } else {
