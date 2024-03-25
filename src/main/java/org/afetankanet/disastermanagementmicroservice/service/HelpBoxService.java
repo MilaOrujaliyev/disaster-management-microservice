@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.afetankanet.disastermanagementmicroservice.entity.HelpBox;
 import org.afetankanet.disastermanagementmicroservice.repository.HelpBoxRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,10 +40,11 @@ public class HelpBoxService {
         return helpBoxRepository.save(existingHelpBox);
     }
     public List<HelpBox> getAllHelpBoxes() {
-        return helpBoxRepository.findAll();
+        return helpBoxRepository.findAll(Sort.by(Sort.Direction.DESC,"active")); //order descending according to active status
+
     }
 
     public List<HelpBox> getHelpBoxesByUserId(Long userId) {
-        return helpBoxRepository.findByUserId(userId);
+        return helpBoxRepository.findByUserId(userId,Sort.by(Sort.Direction.DESC, "active"));
     }
 }

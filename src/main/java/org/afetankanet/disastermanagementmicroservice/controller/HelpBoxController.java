@@ -57,7 +57,6 @@ public class HelpBoxController {
     }
 
 
-
     @GetMapping("/getAllHelpBoxes")
     public ResponseEntity<List<HelpBox>> getAllHelpBoxes(){
         return ResponseEntity.ok(helpBoxService.getAllHelpBoxes());
