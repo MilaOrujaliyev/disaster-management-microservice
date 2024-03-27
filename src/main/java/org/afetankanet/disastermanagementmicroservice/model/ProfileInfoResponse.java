@@ -5,6 +5,7 @@ public class ProfileInfoResponse {
     private String username;
     private String nameSurname;
     private String profilePicture;
+    private String email;
 
     public Long getId() {
         return id;
@@ -36,5 +37,13 @@ public class ProfileInfoResponse {
 
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

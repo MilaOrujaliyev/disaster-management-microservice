@@ -16,6 +16,7 @@ public class UserToProfileInfoResponseConverter {
         profileInfoResponse.setId(user.getId());
         profileInfoResponse.setUsername(user.getUsername());
         profileInfoResponse.setNameSurname(user.getNameSurname());
+        profileInfoResponse.setEmail(user.getEmail());
 
 
         if (user.getProfilePicture() != null) {
