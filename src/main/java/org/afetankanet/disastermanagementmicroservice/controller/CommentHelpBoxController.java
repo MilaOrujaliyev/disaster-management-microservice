@@ -16,7 +16,7 @@ public class CommentHelpBoxController {
     @Autowired
     private CommentHelpBoxService commentHelpBoxService;
 
-    @PostMapping("add")
+    @PostMapping("/add")
     public ResponseEntity<CommentHelpBox> addComment(@Valid @RequestBody CommentHelpBox commentHelpBox){
         return ResponseEntity.ok(commentHelpBoxService.addComment(commentHelpBox));
     }

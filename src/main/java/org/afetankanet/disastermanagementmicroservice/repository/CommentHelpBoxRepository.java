@@ -8,5 +8,4 @@ import java.util.List;
 
 @Repository
 public interface CommentHelpBoxRepository extends JpaRepository<CommentHelpBox,Long> {
-    List<CommentHelpBox> findByHelpBoxId(Long helpBoxId);
 }

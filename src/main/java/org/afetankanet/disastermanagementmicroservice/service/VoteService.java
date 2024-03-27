@@ -33,8 +33,9 @@ public class VoteService {
                 .orElseThrow(() -> new RuntimeException("Yardım kutusu bulunamadı"));
         vote.setHelpBox(helpBox);
 
-        userService.updateTrustScore(vote.getVotedUser().getId());
         voteRepository.save(vote);
+
+        userService.updateTrustScore(vote.getVotedUser().getId());
 
         return vote;
     }

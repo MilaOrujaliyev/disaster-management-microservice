@@ -1,5 +1,7 @@
 package org.afetankanet.disastermanagementmicroservice.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -40,7 +42,12 @@ public class HelpBox {
     @ManyToOne
     @JoinColumn(name="user_id")
     private User user;
-
+    @JsonManagedReference
+    @OneToMany(mappedBy = "helpBox",
+            orphanRemoval = true,
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL)
+    List<CommentHelpBox> commentHelpBoxes;
 
     public Long getId() {
         return id;
@@ -107,4 +114,11 @@ public class HelpBox {
         this.user = user;
     }
 
+    public List<CommentHelpBox> getCommentHelpBoxes() {
+        return commentHelpBoxes;
+    }
+
+    public void setCommentHelpBoxes(List<CommentHelpBox> commentHelpBoxes) {
+        this.commentHelpBoxes = commentHelpBoxes;
+    }
 }
