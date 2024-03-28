@@ -27,11 +27,10 @@ public class EmailClientService {
         emailRequest.setTo(userResponse.getEmail());
         emailRequest.setSubject(subject);
 
-        // E-posta şablonu için bilgi
         Map<String, Object> templateModel = new HashMap<>();
         templateModel.put("username", userResponse.getUsername().toUpperCase(Locale.forLanguageTag("tr-TR")));
+        templateModel.put("email", userResponse.getEmail());
 
-        // Ekstra şablon verilerini ekle
         templateModel.putAll(extraTemplateData);
 
         emailRequest.setTemplateModel(templateModel);
@@ -54,7 +53,6 @@ public class EmailClientService {
 
         restTemplate.postForObject(emailServiceUrl, emailRequest, String.class);
     }
-
 
 }
 

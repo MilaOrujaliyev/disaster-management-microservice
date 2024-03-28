@@ -56,7 +56,6 @@ public class HelpBoxController {
         }
     }
 
-
     @GetMapping("/getAllHelpBoxes")
     public ResponseEntity<List<HelpBox>> getAllHelpBoxes(){
         List<HelpBox> helpBoxList = helpBoxService.getAllHelpBoxes();
@@ -66,6 +65,12 @@ public class HelpBoxController {
     @GetMapping("/getHelpBoxesByUserId/{userId}")
     public ResponseEntity<List<HelpBox>> getHelpBoxesByUserId(@PathVariable Long userId){
         return ResponseEntity.ok(helpBoxService.getHelpBoxesByUserId(userId));
+    }
+
+    @PostMapping("/send-email/{helpBoxId}")
+    public ResponseEntity<String> sendHelpBoxEmail(@PathVariable Long helpBoxId, @RequestBody String emailContent) {
+        helpBoxService.sendHelpBoxEmail(helpBoxId, emailContent);
+        return ResponseEntity.ok("Email sent successfully");
     }
 
 }

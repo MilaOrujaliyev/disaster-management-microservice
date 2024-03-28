@@ -1,5 +1,7 @@
 package org.afetankanet.disastermanagementmicroservice.model;
 
+import org.afetankanet.disastermanagementmicroservice.entity.User;
+
 public class UserResponse {
 
     private Long id;
@@ -13,6 +15,11 @@ public class UserResponse {
     }
 
     public UserResponse() {
+    }
+
+    public UserResponse(User user) {
+        this.username = user.getUsername();
+        this.email = user.getEmail();
     }
 
     public Long getId() {

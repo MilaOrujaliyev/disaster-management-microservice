@@ -2,6 +2,8 @@ package org.afetankanet.disastermanagementmicroservice.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.afetankanet.disastermanagementmicroservice.entity.HelpBox;
+import org.afetankanet.disastermanagementmicroservice.entity.User;
+import org.afetankanet.disastermanagementmicroservice.model.UserResponse;
 import org.afetankanet.disastermanagementmicroservice.repository.HelpBoxRepository;
 import org.afetankanet.disastermanagementmicroservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class HelpBoxService {
@@ -60,4 +64,22 @@ public class HelpBoxService {
     public List<HelpBox> getHelpBoxesByUserId(Long userId) {
         return helpBoxRepository.findByUserId(userId,Sort.by(Sort.Direction.DESC, "active"));
     }
+
+    public void sendHelpBoxEmail(Long helpBoxId, String emailContent) {
+
+            HelpBox helpBox = helpBoxRepository.findById(helpBoxId)
+                    .orElseThrow(() -> new RuntimeException("Yardım Kutusu Bulunamadı"));
+
+            User user = helpBox.getUser();
+
+            Map<String, Object> extraTemplateData = new HashMap<>();
+
+            extraTemplateData.put("emailContent", emailContent);
+
+            emailClientService.sendEmail(
+                    new UserResponse(user),
+                    "Yardım Kutusu Bildirimi",
+                    "helpBoxTemplate",
+                    extraTemplateData);
+        }
 }
