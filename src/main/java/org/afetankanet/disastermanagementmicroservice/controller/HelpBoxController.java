@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import org.afetankanet.disastermanagementmicroservice.entity.HelpBox;
 import org.afetankanet.disastermanagementmicroservice.model.Category;
 import org.afetankanet.disastermanagementmicroservice.model.City;
+import org.afetankanet.disastermanagementmicroservice.model.EmailContentRequest;
 import org.afetankanet.disastermanagementmicroservice.service.HelpBoxService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,8 @@ public class HelpBoxController {
 
     @Autowired
     private HelpBoxService helpBoxService;
+
+
 
     @GetMapping("/cities")
     public List<String> getCities(){
@@ -68,9 +71,9 @@ public class HelpBoxController {
     }
 
     @PostMapping("/send-email/{helpBoxId}")
-    public ResponseEntity<String> sendHelpBoxEmail(@PathVariable Long helpBoxId, @RequestBody String emailContent) {
-        helpBoxService.sendHelpBoxEmail(helpBoxId, emailContent);
-        return ResponseEntity.ok("Email sent successfully");
+    public ResponseEntity<String> sendHelpBoxEmail(@PathVariable Long helpBoxId, @RequestBody EmailContentRequest emailContentRequest) {
+        helpBoxService.sendHelpBoxEmail(helpBoxId, emailContentRequest.getEmailContent(), emailContentRequest.getEmail(), emailContentRequest.getUsername());
+        return ResponseEntity.ok("Email başarılı bir şekilde gönderildi.");
     }
 
 }

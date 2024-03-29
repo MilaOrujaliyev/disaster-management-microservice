@@ -65,21 +65,21 @@ public class HelpBoxService {
         return helpBoxRepository.findByUserId(userId,Sort.by(Sort.Direction.DESC, "active"));
     }
 
-    public void sendHelpBoxEmail(Long helpBoxId, String emailContent) {
+    public void sendHelpBoxEmail(Long helpBoxId, String emailContent, String userEmail, String username) {
+        HelpBox helpBox = helpBoxRepository.findById(helpBoxId)
+                .orElseThrow(() -> new RuntimeException("Yardım Kutusu Bulunamadı"));
 
-            HelpBox helpBox = helpBoxRepository.findById(helpBoxId)
-                    .orElseThrow(() -> new RuntimeException("Yardım Kutusu Bulunamadı"));
+        User user = helpBox.getUser();
 
-            User user = helpBox.getUser();
+        Map<String, Object> extraTemplateData = new HashMap<>();
+        extraTemplateData.put("emailContent", emailContent);
+        extraTemplateData.put("userEmail", userEmail);
+        extraTemplateData.put("username", username);
 
-            Map<String, Object> extraTemplateData = new HashMap<>();
-
-            extraTemplateData.put("emailContent", emailContent);
-
-            emailClientService.sendEmail(
-                    new UserResponse(user),
-                    "Yardım Kutusu Bildirimi",
-                    "helpBoxTemplate",
-                    extraTemplateData);
-        }
+        emailClientService.sendEmail(
+                new UserResponse(user),
+                "Yardım Kutusu Bildirimi",
+                "helpBoxTemplate",
+                extraTemplateData);
+    }
 }
