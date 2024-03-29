@@ -1,11 +1,32 @@
 package org.afetankanet.disastermanagementmicroservice.model;
 
+import jakarta.persistence.Column;
+
 public class ProfileInfoResponse {
     private Long id;
     private String username;
     private String nameSurname;
     private String profilePicture;
     private String email;
+    private String password;
+
+    private Integer trustScore;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Integer getTrustScore() {
+        return trustScore;
+    }
+
+    public void setTrustScore(Integer trustScore) {
+        this.trustScore = trustScore;
+    }
 
     public Long getId() {
         return id;
