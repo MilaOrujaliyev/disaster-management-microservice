@@ -69,17 +69,21 @@ public class HelpBoxService {
         HelpBox helpBox = helpBoxRepository.findById(helpBoxId)
                 .orElseThrow(() -> new RuntimeException("Yardım Kutusu Bulunamadı"));
 
-        User user = helpBox.getUser();
+        User helpBoxOwner  = helpBox.getUser();
 
+        if (!helpBoxOwner.getEmail().equals(userEmail)) {
         Map<String, Object> extraTemplateData = new HashMap<>();
         extraTemplateData.put("emailContent", emailContent);
         extraTemplateData.put("userEmail", userEmail);
         extraTemplateData.put("username", username);
 
         emailClientService.sendEmail(
-                new UserResponse(user),
+                new UserResponse(helpBoxOwner ),
                 "Yardım Kutusu Bildirimi",
                 "helpBoxTemplate",
                 extraTemplateData);
+        } else {
+            throw new IllegalArgumentException("Kutu sahibi kendine e-posta gönderemez.");
+        }
     }
 }

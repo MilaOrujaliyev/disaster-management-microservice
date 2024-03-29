@@ -72,8 +72,12 @@ public class HelpBoxController {
 
     @PostMapping("/send-email/{helpBoxId}")
     public ResponseEntity<String> sendHelpBoxEmail(@PathVariable Long helpBoxId, @RequestBody EmailContentRequest emailContentRequest) {
-        helpBoxService.sendHelpBoxEmail(helpBoxId, emailContentRequest.getEmailContent(), emailContentRequest.getEmail(), emailContentRequest.getUsername());
-        return ResponseEntity.ok("Email başarılı bir şekilde gönderildi.");
+        try {
+            helpBoxService.sendHelpBoxEmail(helpBoxId, emailContentRequest.getEmailContent(), emailContentRequest.getEmail(), emailContentRequest.getUsername());
+            return ResponseEntity.ok("Email başarılı bir şekilde gönderildi.");
+        }catch(IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
 }
