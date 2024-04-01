@@ -19,6 +19,7 @@ import java.util.Base64;
 
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin(origins = "*")
@@ -90,6 +91,11 @@ public class UserController {
         return userService.getUserProfile(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.noContent().build());
+    }
+    @GetMapping("/getAllUserProfiles")
+    public ResponseEntity<List<ProfileInfoResponse>> getAllUserProfiles() {
+        List<ProfileInfoResponse> profiles = userService.getAllUserProfiles();
+        return ResponseEntity.ok(profiles);
     }
 
     @GetMapping("/request/{email}")

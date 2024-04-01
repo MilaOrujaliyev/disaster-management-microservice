@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -131,6 +132,12 @@ public class UserService {
 
     public Optional<ProfileInfoResponse> getUserProfile(Long id) {
         return userRepository.findById(id).map(UserToProfileInfoResponseConverter::convert);
+    }
+
+    public List<ProfileInfoResponse> getAllUserProfiles() {
+        return userRepository.findAll().stream()
+                .map(UserToProfileInfoResponseConverter::convert)
+                .collect(Collectors.toList());
     }
 
     public boolean isNameSurnameFilled(Long userId){
