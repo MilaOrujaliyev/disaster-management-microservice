@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class HelpBoxService {
@@ -62,8 +63,14 @@ public class HelpBoxService {
     }
 
     public List<HelpBox> getHelpBoxesByUserId(Long userId) {
-        return helpBoxRepository.findByUserId(userId,Sort.by(Sort.Direction.DESC, "active"));
+
+        List<HelpBox> allHelpBoxes = helpBoxRepository.findAll();
+
+        return allHelpBoxes.stream()
+                .filter(helpBox -> helpBox.getUser() != null && helpBox.getUser().getId().equals(userId))
+                .collect(Collectors.toList());
     }
+
 
     public void sendHelpBoxEmail(Long helpBoxId, String emailContent, String userEmail, String username) {
         HelpBox helpBox = helpBoxRepository.findById(helpBoxId)
