@@ -31,7 +31,7 @@ public class UserService {
     @Autowired
     private VoteRepository voteRepository;
 
-
+    @Transactional
     public UserResponse registerUser(UserRegisterRequest userRegisterRequest) throws DuplicateUsernameException, DuplicateEmailException {
 
             if(userRepository.findByEmail(userRegisterRequest.getEmail()).isPresent()){
@@ -75,6 +75,7 @@ public class UserService {
         return Optional.empty();
     }
 
+    @Transactional
     public void uploadProfilePicture(Long userId, MultipartFile file) throws IOException {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı."));
 
@@ -89,6 +90,7 @@ public class UserService {
         userRepository.save(user);
     }
 
+    @Transactional
     public UserResponse updateUserInfo(UserUpdateRequest userUpdateRequest) {
         User user = userRepository.findById(userUpdateRequest.getId()).orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı."));
 
@@ -111,6 +113,7 @@ public class UserService {
         return userResponse;
     }
 
+    @Transactional
     public void updatePassword(PasswordUpdateRequest passwordUpdateRequest) {
         User user;
         if (passwordUpdateRequest.getEmail() != null) {
@@ -130,21 +133,25 @@ public class UserService {
         emailClientService.sendEmail(userResponse, "Şifreniz Değiştirildi!", "password-change-confirmation");
     }
 
+    @Transactional
     public Optional<ProfileInfoResponse> getUserProfile(Long id) {
         return userRepository.findById(id).map(UserToProfileInfoResponseConverter::convert);
     }
 
+    @Transactional
     public List<ProfileInfoResponse> getAllUserProfiles() {
         return userRepository.findAll().stream()
                 .map(UserToProfileInfoResponseConverter::convert)
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public boolean isNameSurnameFilled(Long userId){
         Optional<User> userOptional=userRepository.findById(userId);
         return userOptional.isPresent() && userOptional.get().getNameSurname()!= null && !userOptional.get().getNameSurname().trim().isEmpty();
     }
 
+    @Transactional
     public void updateTrustScore(Long votedUserId) {
         User user = userRepository.findById(votedUserId)
                 .orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı"));

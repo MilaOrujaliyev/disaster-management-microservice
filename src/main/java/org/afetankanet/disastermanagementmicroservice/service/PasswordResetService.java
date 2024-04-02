@@ -1,5 +1,6 @@
 package org.afetankanet.disastermanagementmicroservice.service;
 
+import jakarta.transaction.Transactional;
 import org.afetankanet.disastermanagementmicroservice.entity.User;
 import org.afetankanet.disastermanagementmicroservice.exception.NotSuchAnEmailException;
 import org.afetankanet.disastermanagementmicroservice.model.UserResponse;
@@ -21,6 +22,7 @@ public class PasswordResetService {
     @Autowired
     private UserRepository userRepository;
 
+    @Transactional
     public void processPasswordResetRequest(String email) {
 
         Optional<User> userOptional =userRepository.findByEmail(email);
