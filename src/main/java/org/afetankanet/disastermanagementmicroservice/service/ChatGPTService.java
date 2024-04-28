@@ -23,7 +23,7 @@ public class ChatGPTService {
 
     public boolean isContentAppropriate(String content) {
         if (!isChatGPTEnabled) {
-            return true; // ChatGPT API devre dışı ise her içeriği uygun kabul eder
+            return true;
         }
         RestTemplate restTemplate = new RestTemplate();
 
