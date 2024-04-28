@@ -1,15 +1,7 @@
 package org.afetankanet.disastermanagementmicroservice.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
-import jakarta.persistence.Table;
-import jakarta.persistence.Column;
-import jakarta.persistence.UniqueConstraint;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+import jakarta.persistence.*;
+
 import java.util.Date;
 
 @Entity
@@ -29,7 +21,7 @@ public class DisasterNews {
     @Column(nullable = false)
     private String link;
 
-    @Temporal(TemporalType.TIMESTAMP)
+
     @Column(nullable = false)
     private Date pubDate;
 
@@ -39,7 +31,8 @@ public class DisasterNews {
     @Column(nullable = false)
     private String imageUrl;
 
-    // Getters and setters
+    @Column
+    private String queryCriteria;
     public Long getId() {
         return id;
     }
@@ -94,5 +87,13 @@ public class DisasterNews {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getQueryCriteria() {
+        return queryCriteria;
+    }
+
+    public void setQueryCriteria(String queryCriteria) {
+        this.queryCriteria = queryCriteria;
     }
 }

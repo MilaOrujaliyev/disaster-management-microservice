@@ -1,17 +1,12 @@
 package org.afetankanet.disastermanagementmicroservice.model;
 
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import org.afetankanet.disastermanagementmicroservice.converter.DateAdapter;
 
-import java.util.Date;
 public class Item {
     private String title;
     private String link;
     private String guid;
-    private Date pubDate;
+    private String pubDate;
     private String description;
     private MediaContent mediaContent;
 
@@ -43,12 +38,11 @@ public class Item {
     }
 
     @XmlElement(name = "pubDate")
-    @XmlJavaTypeAdapter(DateAdapter.class)
-    public Date getPubDate() {
+    public String getPubDate() {
         return pubDate;
     }
 
-    public void setPubDate(Date pubDate) {
+    public void setPubDate(String pubDate) {
         this.pubDate = pubDate;
     }
 

@@ -1,10 +1,14 @@
 package org.afetankanet.disastermanagementmicroservice.service;
 
-import jakarta.xml.bind.JAXBException;
+import org.afetankanet.disastermanagementmicroservice.converter.DateConverter;
 import org.afetankanet.disastermanagementmicroservice.model.RssFeed;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -31,6 +35,11 @@ public class DisasterNewsService {
     public DisasterNewsService(DisasterNewsRepository disasterNewsRepository) {
         this.restTemplate =  new RestTemplate();
         this.disasterNewsRepository = disasterNewsRepository;
+    }
+
+    public Page<DisasterNews> getAllDisasterNewsWithPaging(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("pubDate").descending());
+        return disasterNewsRepository.findAll(pageable);
     }
 
     @Scheduled(fixedRateString = "${schedule.fixedRate}")
@@ -63,20 +72,22 @@ public class DisasterNewsService {
             for (org.afetankanet.disastermanagementmicroservice.model.Item item : rssFeed.getChannel().getItems()) {
                 if(item.getMediaContent()!=null){
                     DisasterNews news = new DisasterNews();
+                    news.setQueryCriteria(query);
                     news.setTitle(item.getTitle());
                     news.setDescription(item.getDescription());
-                    news.setPubDate(item.getPubDate());
+                    news.setPubDate(new DateConverter().convertStringToDate(item.getPubDate()));
                     news.setLink(item.getLink());
                     news.setGuid(item.getGuid());
                     news.setImageUrl(item.getMediaContent().getUrl());
+
                     disasterNewsRepository.save(news);
                 }
 
             }
         } catch (ConstraintViolationException | DataIntegrityViolationException e) {
             System.out.println("ConstraintViolationException : The content is already exist ");
-        } catch (JAXBException e) {
-            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

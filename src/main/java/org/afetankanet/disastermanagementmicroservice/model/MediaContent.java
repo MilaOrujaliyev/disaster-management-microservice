@@ -1,9 +1,6 @@
 package org.afetankanet.disastermanagementmicroservice.model;
 
 import jakarta.xml.bind.annotation.XmlAttribute;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlType;
 
 
 public class MediaContent {
