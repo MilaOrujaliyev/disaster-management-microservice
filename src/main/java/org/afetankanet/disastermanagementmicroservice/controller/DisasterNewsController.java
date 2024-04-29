@@ -25,5 +25,33 @@ public class DisasterNewsController {
         return ResponseEntity.ok(disasterNewsService.getAllDisasterNewsWithPaging(page, size));
     }
 
+    @GetMapping("/disaster")
+    public ResponseEntity<Page<DisasterNews>> getNewsByDisaster(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(disasterNewsService.findNewsByCriteria("afet", page, size));
+    }
 
+    @GetMapping("/flood")
+    public ResponseEntity<Page<DisasterNews>> getNewsByFlood(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(disasterNewsService.findNewsByCriteria("sel", page, size));
+    }
+
+    @GetMapping("/fire")
+    public ResponseEntity<Page<DisasterNews>> getNewsByFire(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(disasterNewsService.findNewsByCriteria("yangın", page, size));
+    }
+
+    @GetMapping("/earthquake")
+    public ResponseEntity<Page<DisasterNews>> getNewsByEarthquake(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(disasterNewsService.findNewsByCriteria("deprem", page, size));
+    }
+
+    @GetMapping("/landslide")
+    public ResponseEntity<Page<DisasterNews>> getNewsByLandslide(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(disasterNewsService.findNewsByCriteria("heyelan", page, size));
+    }
+
+    @GetMapping("/weather")
+    public ResponseEntity<Page<DisasterNews>> getNewsByWeather(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(disasterNewsService.findNewsByCriteria("hava durumu", page, size));
+    }
 }

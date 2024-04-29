@@ -41,7 +41,10 @@ public class DisasterNewsService {
         Pageable pageable = PageRequest.of(page, size, Sort.by("pubDate").descending());
         return disasterNewsRepository.findAll(pageable);
     }
-
+    public Page<DisasterNews> findNewsByCriteria(String queryCriteria, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("pubDate").descending());
+        return disasterNewsRepository.findByQueryCriteria(queryCriteria, pageable);
+    }
     @Scheduled(fixedRateString = "${schedule.fixedRate}")
     public void scheduleFetchNewsAndSave() {
 
