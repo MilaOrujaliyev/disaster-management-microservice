@@ -152,11 +152,12 @@ public class UserService {
     }
 
     @Transactional
-    public void updateTrustScore(Long votedUserId) {
-        User user = userRepository.findById(votedUserId)
+    public void updateTrustScore(Long userId) {
+
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı"));
 
-        List<Vote> userVotes = voteRepository.findByVotedUserId(votedUserId);
+        List<Vote> userVotes = voteRepository.findByVotedUserId(userId);
         int newScore = calculateNewTrustScore(userVotes);
         user.setTrustScore(newScore);
         userRepository.save(user);
@@ -167,10 +168,10 @@ public class UserService {
             return 0; // Eğer kullanıcıya hiç oy verilmemişse, varsayılan skor= 0
         }
 
-        int totalScore = votes.stream()
-                .mapToInt(Vote::getScore)
-                .sum();
+        int totalScore = votes.stream().mapToInt(Vote::getScore).sum();
+        float averageScore = (float) totalScore / votes.size();
+        System.out.println("Total Score: " + totalScore + ", Number of Votes: " + votes.size() + ", Average Score: " + averageScore);
 
-        return Math.round((float) totalScore / votes.size());
+        return Math.round(averageScore);
     }
 }

@@ -21,7 +21,6 @@ public class DisasterNews {
     @Column(nullable = false)
     private String link;
 
-
     @Column(nullable = false)
     private Date pubDate;
 

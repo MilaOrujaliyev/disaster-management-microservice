@@ -18,7 +18,7 @@ public class User {
     @Column
     private String password;
     @Column
-    private Integer trustScore; // Kullanıcının güvenilirlik skoru --2.term
+    private  Integer trustScore; // Kullanıcının güvenilirlik skoru --2.term
     @Lob
     @Basic(fetch=FetchType.LAZY)
     private byte[] profilePicture; //kullanıcı profil resmi(binary data in db) ekledim 2.term

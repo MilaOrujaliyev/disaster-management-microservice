@@ -25,18 +25,25 @@ public class VoteService {
 
     public Vote castVote(Vote vote) {
 
-        User votedUser = userRepository.findById(vote.getVotedUser().getId())
-                .orElseThrow(() -> new RuntimeException("Oy verilen kullanıcı bulunamadı"));
-        vote.setVotedUser(votedUser);
-
         HelpBox helpBox = helpBoxRepository.findById(vote.getHelpBox().getId())
                 .orElseThrow(() -> new RuntimeException("Yardım kutusu bulunamadı"));
         vote.setHelpBox(helpBox);
 
+        User votedUser = userRepository.findById(helpBox.getUser().getId())
+                .orElseThrow(() -> new RuntimeException("Oy verilen kullanıcı bulunamadı"));
+        vote.setVotedUser(votedUser);
+
+
         voteRepository.save(vote);
 
-        userService.updateTrustScore(vote.getVotedUser().getId());
+        userService.updateTrustScore(helpBox.getUser().getId());
 
         return vote;
+    }
+
+    public int getScoreByHelpBoxId(Long helpBoxId){
+        HelpBox helpBox = helpBoxRepository.findById(helpBoxId)
+                .orElseThrow(() -> new RuntimeException("HelpBox bulunamadı"));
+        return helpBox.getUser().getTrustScore();
     }
 }
