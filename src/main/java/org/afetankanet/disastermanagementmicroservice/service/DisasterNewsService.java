@@ -72,25 +72,29 @@ public class DisasterNewsService {
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             RssFeed rssFeed = (RssFeed) unmarshaller.unmarshal(new StringReader(response));
 
+            DisasterNews newsDuplicate = null;
             for (org.afetankanet.disastermanagementmicroservice.model.Item item : rssFeed.getChannel().getItems()) {
-                if(item.getMediaContent()!=null){
-                    DisasterNews news = new DisasterNews();
-                    news.setQueryCriteria(query);
-                    news.setTitle(item.getTitle());
-                    news.setDescription(item.getDescription());
-                    news.setPubDate(new DateConverter().convertStringToDate(item.getPubDate()));
-                    news.setLink(item.getLink());
-                    news.setGuid(item.getGuid());
-                    news.setImageUrl(item.getMediaContent().getUrl());
-
-                    disasterNewsRepository.save(news);
+                try {
+                    if(item.getMediaContent()!=null){
+                        DisasterNews news = new DisasterNews();
+                        news.setQueryCriteria(query);
+                        news.setTitle(item.getTitle());
+                        news.setDescription(item.getDescription());
+                        news.setPubDate(new DateConverter().convertStringToDate(item.getPubDate()));
+                        news.setLink(item.getLink());
+                        news.setGuid(item.getGuid());
+                        news.setImageUrl(item.getMediaContent().getUrl());
+                        newsDuplicate = news;
+                        disasterNewsRepository.save(news);
+                    }
+                } catch (ConstraintViolationException | DataIntegrityViolationException e) {
+                    System.out.println("ConstraintViolationException : The DisasterNews is already exist:"+newsDuplicate.getPubDate() + ":"+newsDuplicate.getGuid());
                 }
 
             }
-        } catch (ConstraintViolationException | DataIntegrityViolationException e) {
-            System.out.println("ConstraintViolationException : The content is already exist ");
+
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("An error occurred while fetching and saving disaster news: " + e.getMessage());
         }
     }
 

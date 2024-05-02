@@ -71,8 +71,8 @@ public class EarthquakeService {
     public void fetchEarthquakesAndSave(Double minLat, Double maxLat, Double minLon, Double maxLon,
                                         Integer minDepth, Integer maxDepth, String startTime, String endTime,
                                         Double minMag, Double maxMag, String format) {
+        Earthquake earthquakeDuplicate =null;
 
-        try{
 
             String baseUrl = "https://deprem.afad.gov.tr/apiv2/event/filter";
             String queryParams = String.format("?start=%s&end=%s&minlat=%.2f&maxlat=%.2f&minlon=%.2f&maxlon=%.2f&mindepth=%d&maxdepth=%d&minmag=%.1f&maxmag=%.1f&format=%s",
@@ -83,16 +83,15 @@ public class EarthquakeService {
 
             List<Earthquake> earthquakeList = Arrays.asList(Objects.requireNonNull(response.getBody()));
 
+
             for (Earthquake earthquake : earthquakeList) {
-                earthquakeRepository.save(earthquake);
+                try {
+                    earthquakeRepository.save(earthquake);
+                } catch (DataIntegrityViolationException e) {
+                    System.out.println("DataIntegrityViolationException: The Earthquake is already exist - EventID: " + earthquake.getEventID() + ", Date: " + earthquake.getDate());
+
+                }
             }
-
-        } catch (ConstraintViolationException | DataIntegrityViolationException e) {
-            System.out.println("ConstraintViolationException : The content is already exist ");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
     }
     public Page<Earthquake> findEarthquakesByDays(int days, int page, int size) {
         LocalDateTime endTime = LocalDateTime.now();
