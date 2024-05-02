@@ -5,6 +5,10 @@ import org.afetankanet.disastermanagementmicroservice.repository.EarthquakeRepos
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -90,4 +94,13 @@ public class EarthquakeService {
         }
 
     }
+    public Page<Earthquake> findEarthquakesByDays(int days, int page, int size) {
+        LocalDateTime endTime = LocalDateTime.now();
+        LocalDateTime startTime = endTime.minusDays(days);
+        Pageable sortedByDateDesc = PageRequest.of(page, size, Sort.by("date").descending());
+        return earthquakeRepository.findByDateBetween(startTime, endTime, sortedByDateDesc);
+    }
+
+
+
 }
