@@ -106,9 +106,19 @@ public class EarthquakeService {
     }
 
     public Page<Earthquake> findEarthquakesByMagnitude(double minMagnitude, double maxMagnitude, int page, int size) {
-        Pageable sortedByMagnitudeDesc = PageRequest.of(page, size, Sort.by("magnitude").descending());
-        return earthquakeRepository.findByMagnitudeBetween(minMagnitude, maxMagnitude, sortedByMagnitudeDesc);
+        Pageable sortedByDateDesc = PageRequest.of(page, size, Sort.by("date").descending());
+        return earthquakeRepository.findByMagnitudeBetween(minMagnitude, maxMagnitude, sortedByDateDesc);
     }
 
+    public List<Earthquake> findEarthquakesByMagnitudeAndDate(double minMagnitude, double maxMagnitude, LocalDateTime startDate, LocalDateTime endDate) {
+        return earthquakeRepository.findByMagnitudeBetweenAndDateBetweenOrderByDateDesc(minMagnitude, maxMagnitude, startDate, endDate);
+    }
 
+    public List<Earthquake> findTop5RecentEarthquakes() {
+        return earthquakeRepository.findTop5ByOrderByDateDesc();
+    }
+
+    public Earthquake findMostRecentEarthquake() {
+        return earthquakeRepository.findTopByOrderByDateDesc();
+    }
 }

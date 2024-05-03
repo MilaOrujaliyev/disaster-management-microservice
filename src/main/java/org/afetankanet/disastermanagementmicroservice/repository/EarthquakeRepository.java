@@ -16,7 +16,9 @@ public interface EarthquakeRepository extends JpaRepository<Earthquake, Long> {
     Page<Earthquake> findByDateBetween(LocalDateTime startDate, LocalDateTime endDate, Pageable pageable);
     Page<Earthquake> findByProvince(String province, Pageable pageable);
     Page<Earthquake> findByMagnitudeBetween(double minMagnitude, double maxMagnitude, Pageable pageable);
-
+    List<Earthquake> findByMagnitudeBetweenAndDateBetweenOrderByDateDesc(double minMagnitude, double maxMagnitude, LocalDateTime startDate, LocalDateTime endDate);
+    List<Earthquake> findTop5ByOrderByDateDesc();
+    Earthquake findTopByOrderByDateDesc();
     List<Earthquake> findByMagnitudeBetween(double minMagnitude, double maxMagnitude);
 }
 

@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/earthquakes")
@@ -104,7 +106,66 @@ public class EarthquakeController {
         return ResponseEntity.ok(earthquakeService.findEarthquakesByMagnitude(8.0, Double.MAX_VALUE, page, size));
     }
 
+    //last 24 minutes-Earthquakes according to magnitude-range
+    @GetMapping("/last 24 minutes-magnitude-range/0-2.9")
+    public ResponseEntity<List<Earthquake>> getEarthquakesMagnitude0To2_9() {
+        LocalDateTime endDate = LocalDateTime.now();
+        LocalDateTime startDate = endDate.minusDays(1);
+        return ResponseEntity.ok(earthquakeService.findEarthquakesByMagnitudeAndDate(0, 2.9, startDate, endDate));
+    }
 
+    @GetMapping("/last 24 minutes-magnitude-range/3-3.9")
+    public ResponseEntity<List<Earthquake>> getEarthquakesMagnitude3To3_9() {
+        LocalDateTime endDate = LocalDateTime.now();
+        LocalDateTime startDate = endDate.minusDays(1);
+        return ResponseEntity.ok(earthquakeService.findEarthquakesByMagnitudeAndDate(3, 3.9, startDate, endDate));
+    }
 
+    @GetMapping("/last 24 minutes-magnitude-range/4-4.9")
+    public ResponseEntity<List<Earthquake>> getEarthquakesMagnitude4To4_9() {
+        LocalDateTime endDate = LocalDateTime.now();
+        LocalDateTime startDate = endDate.minusDays(1);
+        return ResponseEntity.ok(earthquakeService.findEarthquakesByMagnitudeAndDate(4, 4.9, startDate, endDate));
+    }
+
+    @GetMapping("/last 24 minutes-magnitude-range/5-5.9")
+    public ResponseEntity<List<Earthquake>> getEarthquakesMagnitude5To5_9() {
+        LocalDateTime endDate = LocalDateTime.now();
+        LocalDateTime startDate = endDate.minusDays(1);
+        return ResponseEntity.ok(earthquakeService.findEarthquakesByMagnitudeAndDate(5, 5.9, startDate, endDate));
+    }
+
+    @GetMapping("/last 24 minutes-magnitude-range/6-6.9")
+    public ResponseEntity<List<Earthquake>> getEarthquakesMagnitude6To6_9() {
+        LocalDateTime endDate = LocalDateTime.now();
+        LocalDateTime startDate = endDate.minusDays(1);
+        return ResponseEntity.ok(earthquakeService.findEarthquakesByMagnitudeAndDate(6, 6.9, startDate, endDate));
+    }
+
+    @GetMapping("/last 24 minutes-magnitude-range/7-7.9")
+    public ResponseEntity<List<Earthquake>> getEarthquakesMagnitude7To7_9() {
+        LocalDateTime endDate = LocalDateTime.now();
+        LocalDateTime startDate = endDate.minusDays(1);
+        return ResponseEntity.ok(earthquakeService.findEarthquakesByMagnitudeAndDate(7, 7.9, startDate, endDate));
+    }
+
+    @GetMapping("/last 24 minutes-magnitude-range/8-")
+    public ResponseEntity<List<Earthquake>> getEarthquakesMagnitude8AndAbove() {
+        LocalDateTime endDate = LocalDateTime.now();
+        LocalDateTime startDate = endDate.minusDays(1);
+        return ResponseEntity.ok(earthquakeService.findEarthquakesByMagnitudeAndDate(8, Double.MAX_VALUE, startDate, endDate));
+    }
+
+    //last-5-earthquakes for map
+    @GetMapping("/last-5-earthquakes")
+    public ResponseEntity<List<Earthquake>> getLast5Earthquakes() {
+        return ResponseEntity.ok(earthquakeService.findTop5RecentEarthquakes());
+    }
+
+    //latest-earthquake
+    @GetMapping("/latest-earthquake")
+    public ResponseEntity<Earthquake> getLatestEarthquake() {
+        return ResponseEntity.ok(earthquakeService.findMostRecentEarthquake());
+    }
 }
 
