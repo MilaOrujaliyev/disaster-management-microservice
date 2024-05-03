@@ -56,7 +56,7 @@ public class EarthquakeService {
         double minLon = 26.000;
         double maxLon = 45.000;
 
-        double minMag = 1.0;
+        double minMag = 0.1;
         double maxMag = 10.0;
         int minDepth = 1;
         int maxDepth = 32;
@@ -100,6 +100,15 @@ public class EarthquakeService {
         return earthquakeRepository.findByDateBetween(startTime, endTime, sortedByDateDesc);
     }
 
+    public Page<Earthquake> findEarthquakesByProvince(String province, int page, int size) {
+        Pageable sortedByDateDesc = PageRequest.of(page, size, Sort.by("date").descending());
+        return earthquakeRepository.findByProvince(province, sortedByDateDesc);
+    }
+
+    public Page<Earthquake> findEarthquakesByMagnitude(double minMagnitude, double maxMagnitude, int page, int size) {
+        Pageable sortedByMagnitudeDesc = PageRequest.of(page, size, Sort.by("magnitude").descending());
+        return earthquakeRepository.findByMagnitudeBetween(minMagnitude, maxMagnitude, sortedByMagnitudeDesc);
+    }
 
 
 }
