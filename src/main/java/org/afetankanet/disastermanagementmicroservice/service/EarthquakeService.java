@@ -2,7 +2,6 @@ package org.afetankanet.disastermanagementmicroservice.service;
 
 import org.afetankanet.disastermanagementmicroservice.entity.Earthquake;
 import org.afetankanet.disastermanagementmicroservice.repository.EarthquakeRepository;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -14,6 +13,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -73,13 +73,24 @@ public class EarthquakeService {
                                         Double minMag, Double maxMag, String format) {
         Earthquake earthquakeDuplicate =null;
 
+        String url = UriComponentsBuilder
+                .fromHttpUrl("https://deprem.afad.gov.tr/apiv2/event/filter")
+                .queryParam("start", startTime)
+                .queryParam("end", endTime)
+                .queryParam("minlat", minLat)
+                .queryParam("maxlat", maxLat)
+                .queryParam("minlon", minLon)
+                .queryParam("maxlon", maxLon)
+                .queryParam("mindepth", minDepth)
+                .queryParam("maxdepth", maxDepth)
+                .queryParam("minmag", minMag)
+                .queryParam("maxmag", maxMag)
+                .queryParam("format", format)
+                .build()
+                .toUriString();
 
-            String baseUrl = "https://deprem.afad.gov.tr/apiv2/event/filter";
-            String queryParams = String.format("?start=%s&end=%s&minlat=%.2f&maxlat=%.2f&minlon=%.2f&maxlon=%.2f&mindepth=%d&maxdepth=%d&minmag=%.1f&maxmag=%.1f&format=%s",
-                    startTime, endTime, minLat, maxLat, minLon, maxLon, minDepth, maxDepth, minMag, maxMag, format);
-            String fullUrl = baseUrl + queryParams;
 
-            ResponseEntity<Earthquake[]> response = restTemplate.getForEntity(fullUrl, Earthquake[].class);
+            ResponseEntity<Earthquake[]> response = restTemplate.getForEntity(url, Earthquake[].class);
 
             List<Earthquake> earthquakeList = Arrays.asList(Objects.requireNonNull(response.getBody()));
 
