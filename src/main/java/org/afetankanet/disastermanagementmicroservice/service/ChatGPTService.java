@@ -19,7 +19,7 @@ public class ChatGPTService {
     private String apiHost;
 
 
-    private static final String CHATGPT_API_ENDPOINT = "https://cheapest-gpt-4-turbo-gpt-4-vision-chatgpt-openai-ai-api.p.rapidapi.com/v1/chat/completions"; // API Endpoint'i
+    private static final String CHATGPT_API_ENDPOINT = "https://cheapest-gpt-4-turbo-gpt-4-vision-chatgpt-openai-ai-api.p.rapidapi.com/v1/chat/completions";
 
     public boolean isContentAppropriate(String content) {
         if (!isChatGPTEnabled) {
